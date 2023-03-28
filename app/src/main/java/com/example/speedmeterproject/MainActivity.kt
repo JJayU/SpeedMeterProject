@@ -37,12 +37,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.ConnectButton.setOnClickListener() {
-            bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5")
+            bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
             bluetoothBridge.connectDevice()
-        }
-
-        binding.updatebutton.setOnClickListener() {
-            //binding.textView3.text = bluetoothBridge.testInt.toString()
         }
     }
 

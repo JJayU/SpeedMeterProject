@@ -81,7 +81,8 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
         }
 
         //TODO -> check if message is correct
-        binding.textView2.text = message
+        val speed : Double = message.toDouble() / 10.0
+        binding.actualSpeed.text = String.format("%04.1f", speed)
     }
 
     private fun onError(error : Throwable) {
