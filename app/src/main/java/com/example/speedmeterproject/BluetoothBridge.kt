@@ -15,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.delay
+import com.example.speedmeterproject.ActivityRecorder
 
 class BluetoothBridge(private val context: Context, private var binding: ActivityMainBinding) {
 
@@ -28,6 +29,10 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
 
     private var connectedDeviceMAC : String? = null
     private var connectedSuccessfully = false
+
+    var activityRecorder = ActivityRecorder(binding)
+
+    private var lastTimeReceived : Long = 0L
 
     fun start() {
         bluetoothManager = BluetoothManager.getInstance()
@@ -81,8 +86,9 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
         }
 
         //TODO -> check if message is correct
-        val speed : Double = message.toDouble() / 10.0
-        binding.actualSpeed.text = String.format("%04.1f", speed)
+        val receivedTimeOfRev = message.toDouble()
+
+        activityRecorder.addTrackpoint(receivedTimeOfRev)
     }
 
     private fun onError(error : Throwable) {

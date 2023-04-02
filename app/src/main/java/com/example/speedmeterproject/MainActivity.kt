@@ -40,6 +40,22 @@ class MainActivity : AppCompatActivity() {
             bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
             bluetoothBridge.connectDevice()
         }
+
+        binding.startButton.setOnClickListener() {
+            if ( !bluetoothBridge.activityRecorder.isRecording() ) {
+                bluetoothBridge.activityRecorder.start()
+                binding.startButton.text = "STOP"
+            }
+            else {
+                bluetoothBridge.activityRecorder.stop()
+                binding.startButton.text = "START"
+            }
+        }
+
+        // TODO -> remove this
+        bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
+        bluetoothBridge.connectDevice()
+        //bluetoothBridge.activityRecorder.start()
     }
 
     override fun onDestroy() {

@@ -35,7 +35,7 @@
                 android:id="@+id/actualSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.0"
+                android:text="00,0"
                 android:textAlignment="center"
                 android:textSize="60sp" />
 
@@ -65,7 +65,7 @@
                     android:id="@+id/tripTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="00:12:34"
+                    android:text="00:00:00"
                     android:textAlignment="center"
                     android:textSize="25sp" />
 
@@ -89,7 +89,7 @@
                     android:id="@+id/tripDistance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="26.22"
+                    android:text="00,00"
                     android:textAlignment="center"
                     android:textSize="25sp" />
 
@@ -113,7 +113,7 @@
                     android:id="@+id/avgSpeed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="12.37"
+                    android:text="00,00"
                     android:textAlignment="center"
                     android:textSize="25sp" />
 
@@ -132,6 +132,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="START" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="SAVE"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 </layout>
