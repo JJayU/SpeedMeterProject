@@ -17,6 +17,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.delay
 import com.example.speedmeterproject.ActivityRecorder
 
+/**
+ * Class that provides an interface to Bluetooth device
+ * Uses BluetoothManager library from https://github.com/harry1453/android-bluetooth-serial
+ */
 class BluetoothBridge(private val context: Context, private var binding: ActivityMainBinding) {
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -27,27 +31,40 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
 
     var permissionManager : PermissionManager = PermissionManager()
 
+    /** MAC Address of the device to connect to */
     private var connectedDeviceMAC : String? = null
+    /** Device connected */
     private var connectedSuccessfully = false
 
     var activityRecorder = ActivityRecorder(binding)
 
-    private var lastTimeReceived : Long = 0L
-
+    /**
+     * Creates BluetoothManager instance and run permissions check
+     */
     fun start() {
         bluetoothManager = BluetoothManager.getInstance()
         permissionManager.onStartupCheck(context)
     }
 
+    /**
+     * Closes connection and service
+     */
     fun stop() {
         bluetoothManager.close()
         bluetoothManager.closeDevice(connectedDeviceMAC)
     }
 
+    /**
+     * Sets MAC address of the device to connect
+     * @param mac MAC Address of the device
+     */
     fun setMacAddress(mac: String) {
         connectedDeviceMAC = mac
     }
 
+    /**
+     * Connects to the device with address provided by setMacAddress() method
+     */
     fun connectDevice() {
         if (connectedDeviceMAC == null) {
             Log.e("BluetoothBridge", "No MAC Address Set!")
@@ -69,16 +86,24 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
         }
     }
 
+    /**
+     * Executed when device is connected
+     */
     private fun onConnected(connectedDevice : BluetoothSerialDevice) {
         deviceInterface = connectedDevice.toSimpleDeviceInterface()
         deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, this::onError)
-        //deviceInterface.sendMessage("Hello :)")
     }
 
+    /**
+     * Executed every time a message is sent to device
+     */
     private fun onMessageSent(message : String) {
         //Toast.makeText(this, "Sent a message!", Toast.LENGTH_SHORT).show()
     }
 
+    /**
+     * Executed every time a message is received
+     */
     private fun onMessageReceived(message: String) {
         if(!connectedSuccessfully) {
             connectedSuccessfully = true
@@ -86,15 +111,26 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
         }
 
         //TODO -> check if message is correct
-        val receivedTimeOfRev = message.toDouble()
+        val receivedTimeOfRev = message.toDoubleOrNull()
 
-        activityRecorder.addTrackpoint(receivedTimeOfRev)
+        if(receivedTimeOfRev != null){
+            activityRecorder.addTrackpoint(receivedTimeOfRev)
+        }
+        else {
+            Log.i("BT Bridge", "Incorrect message received!")
+        }
     }
 
+    /**
+     * Executed on error
+     */
     private fun onError(error : Throwable) {
         return
     }
 
+    /**
+     * Lists all paired bluetooth devices and print them to the log
+     */
     @SuppressLint("MissingPermission")
     fun listBluetoothDevices() {
         if (!permissionManager.hasBluetoothPermission(context)) {

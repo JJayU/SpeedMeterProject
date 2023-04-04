@@ -7,8 +7,14 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
+/**
+ * Class to manage permission needed for the app to run correctly
+ */
 class PermissionManager {
 
+    /**
+     * Check every permission needed for bluetooth connectivity to run
+     */
     fun onStartupCheck(context : Context) {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -18,6 +24,9 @@ class PermissionManager {
         }
     }
 
+    /**
+     * Check if app has bluetooth permission
+     */
     fun hasBluetoothPermission(context: Context) : Boolean {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
             return false
@@ -25,6 +34,9 @@ class PermissionManager {
         return true
     }
 
+    /**
+     * Executed after permission request is showed to user
+     */
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray, context: Context) {
         when (requestCode) {
             1 -> {
