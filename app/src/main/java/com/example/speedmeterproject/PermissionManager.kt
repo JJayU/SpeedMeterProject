@@ -20,7 +20,7 @@ class PermissionManager {
             ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(context as Activity, arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-            Toast.makeText(context, "No permission for Bluetooth or location!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "No permission for Bluetooth or location or storage!", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -43,7 +43,7 @@ class PermissionManager {
                 // Check if user has given permissions
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     // Permissions granted
-                    Toast.makeText(context, "Przyznano uprawienia", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Permissions granted", Toast.LENGTH_LONG).show()
                 } else {
                     // Permissions not granted
                     Toast.makeText(context, "Permissions not granted", Toast.LENGTH_SHORT).show()

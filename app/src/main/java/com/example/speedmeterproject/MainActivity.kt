@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.saveButton.setOnClickListener() {
+            bluetoothBridge.activityRecorder.saveToFile()
+        }
+
         // TODO -> remove this
         bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
         bluetoothBridge.connectDevice()

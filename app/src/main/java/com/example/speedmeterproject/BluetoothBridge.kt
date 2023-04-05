@@ -36,7 +36,7 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
     /** Device connected */
     private var connectedSuccessfully = false
 
-    var activityRecorder = ActivityRecorder(binding)
+    var activityRecorder = ActivityRecorder(context, binding)
 
     /**
      * Creates BluetoothManager instance and run permissions check
