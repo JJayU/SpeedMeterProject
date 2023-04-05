@@ -43,8 +43,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.startButton.setOnClickListener() {
             if ( !bluetoothBridge.activityRecorder.isRecording() ) {
-                bluetoothBridge.activityRecorder.start()
-                binding.startButton.text = "STOP"
+                if(!bluetoothBridge.activityRecorder.isSaved() && !bluetoothBridge.activityRecorder.isEmpty()) {
+                    Toast.makeText(this, "Activity not saved yet!", Toast.LENGTH_LONG).show() //TODO -> add a prompt to ask user if he wants to discard activity
+                } else {
+                    bluetoothBridge.activityRecorder.start()
+                    binding.startButton.text = "STOP"
+                }
             }
             else {
                 bluetoothBridge.activityRecorder.stop()

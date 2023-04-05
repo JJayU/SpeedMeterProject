@@ -27,9 +27,13 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
 
     /** True if activity is being recorded */
     private var recording = false
+    /** True if activity is saved */
+    private var saved = false
 
     /** UTC Time of activity start */
     private var timeAtStart = 0L
+    /** UTC Time of activity end */
+    private var timeAtStop = 0L
     /** UTC Time of last message received */
     private var lastTimeReceivedMillis = 0L
 
@@ -47,6 +51,7 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
             avgSpeed = 0.0
             trackpointList.clear()
             recording = true
+            saved = false
             binding.saveButton.visibility = View.GONE
         }
     }
@@ -57,6 +62,7 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
     fun stop() {
         if(recording) {
             recording = false
+            timeAtStop = System.currentTimeMillis()
             if(trackpointList.size > 0) {
                 binding.saveButton.visibility = View.VISIBLE
             }
@@ -72,20 +78,32 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
     }
 
     /**
+     * Return true if activity is already saved
+     */
+    fun isSaved() : Boolean {
+        return saved
+    }
+
+    /**
+     * Returns true if there aren't any points recorded
+     */
+    fun isEmpty() : Boolean {
+        return trackpointList.isEmpty()
+    }
+
+    /**
      * Adds a new trackpoint to the activity when "recording" is true
      * @param receivedTimeOfRev time of a single wheel revolution received from the device
      */
     fun addTrackpoint(receivedTimeOfRev : Double) {
         if(recording) {
             val actualTimeMillis = System.currentTimeMillis()
-            var diffTime = 0L
-            var measuredDistance = 0.0
             val actualTime = LocalDateTime.now()
             currentSpeed = 0.0
 
             if(lastTimeReceivedMillis != 0L && receivedTimeOfRev < 9999){
-                diffTime = actualTimeMillis - lastTimeReceivedMillis
-                measuredDistance = diffTime/receivedTimeOfRev * 2.2                                     //TODO -> change to configured wheel circumference
+                val diffTime: Long = actualTimeMillis - lastTimeReceivedMillis
+                val measuredDistance = diffTime/receivedTimeOfRev * 2.2                 //TODO -> change to configured wheel circumference
                 currentSpeed = (measuredDistance/1000.0) / (diffTime/1000.0/60.0/60.0)
 
                 distance += measuredDistance/1000.0
@@ -131,64 +149,9 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
 
             if(file.isFile) {
                 Log.i("AR", "File created successfully!")
-
-                val xmlSerializer = Xml.newSerializer()
-                val writer = StringWriter()
-
-                // Prepare .tcx file content
-                xmlSerializer.apply {
-                    setOutput(writer)
-                    startDocument("UTF-8", true)
-                    startTag("", "TrainingCenterDatabase")
-                    attribute("", "xsi:schemaLocation", "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 http://www.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd")
-                    attribute("", "xmlns:ns5", "http://www.garmin.com/xmlschemas/ActivityGoals/v1")
-                    attribute("", "xmlns:ns3", "http://www.garmin.com/xmlschemas/ActivityExtension/v2")
-                    attribute("", "xmlns:ns2", "http://www.garmin.com/xmlschemas/UserProfile/v2")
-                    attribute("", "xmlns", "http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2")
-                    attribute("", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-                    attribute("", "xmlns:ns4", "http://www.garmin.com/xmlschemas/ProfileExtension/v1")
-                        startTag("", "Activities")
-                            startTag("", "Activity")
-                            attribute("", "Sport", "Biking")
-                                startTag("", "Id")
-                                text(activityID)
-                                endTag("", "Id")
-                                startTag("", "Lap")
-                                attribute("", "StartTime", activityID)
-                                    startTag("", "TotalTimeSeconds")
-                                    text(((System.currentTimeMillis() - timeAtStart)/1000.0).toString())
-                                    endTag("", "TotalTimeSeconds")
-                                    startTag("", "DistanceMeters")
-                                    text((distance*1000.0).toString())
-                                    endTag("", "DistanceMeters")
-                                    //TODO -> maximum speed
-                                    startTag("", "Intensity")
-                                    text("Active")
-                                    endTag("", "Intensity")
-                                    startTag("", "TriggerMethod")
-                                    text("Manual")
-                                    endTag("", "TriggerMethod")
-                                    startTag("", "Track")
-                                        for(trackpoint in trackpointList) {
-                                            startTag("", "Trackpoint")
-                                            startTag("", "Time")
-                                            text(trackpoint.time.toString())
-                                            endTag("", "Time")
-                                            startTag("", "DistanceMeters")
-                                            text((trackpoint.distance*1000.0).toString())
-                                            endTag("", "DistanceMeters")
-                                            endTag("", "Trackpoint")
-                                        }
-                                    endTag("", "Track")
-                                endTag("", "Lap")
-                            endTag("", "Activity")
-                        endTag("", "Activities")
-                    endTag("", "TrainingCenterDatabase")
-                    endDocument()
-                }
-
-                file.writeText(writer.toString())
+                file.writeText(XmlGenerator().generateTCX(trackpointList, activityID, timeAtStart, timeAtStop, distance))
                 Log.i("AR", "File saved!")
+                saved = true
             } else {
                 Log.i("AR", "File couldn't be created!")
             }
