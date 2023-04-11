@@ -3,10 +3,9 @@ package com.example.speedmeterproject
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.Context
-import android.os.Looper
-import android.os.Handler
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.speedmeterproject.databinding.ActivityMainBinding
 import com.harrysoft.androidbluetoothserial.BluetoothManager
 import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice
@@ -14,8 +13,6 @@ import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.delay
-import com.example.speedmeterproject.ActivityRecorder
 
 /**
  * Class that provides an interface to Bluetooth device
@@ -34,7 +31,7 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
     /** MAC Address of the device to connect to */
     private var connectedDeviceMAC : String? = null
     /** Device connected */
-    private var connectedSuccessfully = false
+    var connectedSuccessfully = false
 
     var activityRecorder = ActivityRecorder(context, binding)
 
@@ -52,6 +49,7 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
     fun stop() {
         bluetoothManager.close()
         bluetoothManager.closeDevice(connectedDeviceMAC)
+        connectedSuccessfully = false
     }
 
     /**
@@ -92,6 +90,7 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
     private fun onConnected(connectedDevice : BluetoothSerialDevice) {
         deviceInterface = connectedDevice.toSimpleDeviceInterface()
         deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, this::onError)
+
     }
 
     /**
@@ -108,9 +107,9 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
         if(!connectedSuccessfully) {
             connectedSuccessfully = true
             Toast.makeText(context, "Connected!", Toast.LENGTH_SHORT).show()
+            binding.ConnectButton.text = getCurrentDeviceName()
         }
 
-        //TODO -> check if message is correct
         val receivedTimeOfRev = message.toDoubleOrNull()
 
         if(receivedTimeOfRev != null){
@@ -143,6 +142,45 @@ class BluetoothBridge(private val context: Context, private var binding: Activit
                 Log.d("BT Test", "Device Name: " + device.name)
                 Log.d("BT Test", "MAC: " + device.address)
             }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getCurrentDeviceName() : String {
+        val pairedDevices : List<BluetoothDevice> = bluetoothManager.pairedDevicesList
+        for (device in pairedDevices) {
+            if (connectedDeviceMAC == device.address) {
+                return device.name
+            }
+        }
+        return ""
+    }
+
+    fun startButtonPressed() {
+        if ( !activityRecorder.isRecording() && connectedSuccessfully ) {
+            if(!activityRecorder.isSaved() && !activityRecorder.isEmpty()) {
+                Toast.makeText(context, "Activity not saved yet!", Toast.LENGTH_LONG).show()
+
+                val alertDialogBuilder = AlertDialog.Builder(context)
+                alertDialogBuilder.setTitle("Activity not saved!")
+                alertDialogBuilder.setMessage("Activity not saved yet, are you sure you want to discard this and start a new one?")
+                alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    activityRecorder.start()
+                    binding.startButton.text = "STOP"
+                }
+                alertDialogBuilder.setNegativeButton("No") { _, _ ->
+
+                }
+                alertDialogBuilder.show()
+            }
+            else {
+                activityRecorder.start()
+                binding.startButton.text = "STOP"
+            }
+        }
+        else {
+            activityRecorder.stop()
+            binding.startButton.text = "START"
         }
     }
 

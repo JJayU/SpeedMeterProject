@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">SpeedMeterProject</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="settings_bike_header">Bike Settings</string>
+    <string name="settings_app_header">App Settings</string>
+    <string name="no_device_connected">Connect</string>
+    <string name="speed_unit_kmph">km/h</string>
+    <string name="time">Time</string>
+    <string name="distance">Distance</string>
+    <string name="avg_speed">Avg. Speed</string>
 </resources>

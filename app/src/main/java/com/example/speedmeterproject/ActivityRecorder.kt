@@ -6,6 +6,7 @@ import android.util.Log
 import android.util.Xml
 import android.view.View
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.ActivityMainBinding
 import java.io.File
 import java.io.StringWriter
@@ -15,6 +16,8 @@ import java.time.LocalDateTime
  * Class to record and process an activity
  */
 class ActivityRecorder(private val context: Context, private var binding: ActivityMainBinding) {
+
+    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     /** Time from the beginning of activity */
     var time = ""
@@ -103,7 +106,8 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
 
             if(lastTimeReceivedMillis != 0L && receivedTimeOfRev < 9999){
                 val diffTime: Long = actualTimeMillis - lastTimeReceivedMillis
-                val measuredDistance = diffTime/receivedTimeOfRev * 2.2                 //TODO -> change to configured wheel circumference
+                val wheelCircumference = sharedPreferences.getString("wheel_circ", "")?.toDoubleOrNull() ?: return
+                val measuredDistance = diffTime/receivedTimeOfRev * (wheelCircumference/1000.0)
                 currentSpeed = (measuredDistance/1000.0) / (diffTime/1000.0/60.0/60.0)
 
                 distance += measuredDistance/1000.0
