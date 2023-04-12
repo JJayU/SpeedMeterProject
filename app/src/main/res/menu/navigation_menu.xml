@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/activitiesFragment"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:title="Activities" />
+    <item
+        android:id="@+id/devicesFragment"
+        android:icon="@android:drawable/stat_sys_data_bluetooth"
+        android:title="Devices" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Settings" />
+    <item
+        android:id="@+id/aboutFragment"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="About" />
+</menu>

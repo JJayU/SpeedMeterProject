@@ -94,7 +94,7 @@
                         android:id="@+id/tripDistance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="00,00"
+                        android:text="00,0"
                         android:textAlignment="center"
                         android:textSize="25sp" />
 
@@ -135,23 +135,25 @@
                 android:id="@+id/startButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="START" />
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/start" />
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="SAVE"
-                android:visibility="gone"
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/save"
+                android:visibility="invisible"
                 tools:visibility="visible" />
 
             <Button
                 android:id="@+id/settings_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Settings" />
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/settings" />
 
         </LinearLayout>
         

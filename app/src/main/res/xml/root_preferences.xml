@@ -3,10 +3,10 @@
     <PreferenceCategory app:title="@string/settings_app_header">
         <SwitchPreferenceCompat
             app:key="auto_connect"
-            app:title="Auto connect on app startup" />
+            app:title="@string/auto_connect" />
         <ListPreference
             app:key="speed_unit"
-            app:title="Speed unit"
+            app:title="@string/speed_unit"
             app:defaultValue="kmph"
             app:entries="@array/speed_unit_entries"
             app:entryValues="@array/speed_unit_values"
@@ -19,7 +19,7 @@
         <EditTextPreference
             app:defaultValue="2200"
             app:key="wheel_circ"
-            app:title="Wheel circumference"
+            app:title="@string/wheel_circumference"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
