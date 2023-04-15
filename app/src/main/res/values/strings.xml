@@ -15,4 +15,9 @@
     <string name="auto_connect">Auto connect on app startup</string>
     <string name="speed_unit">Speed unit</string>
     <string name="wheel_circumference">Wheel circumference</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about">About</string>
+    <string name="devices">Devices</string>
+    <string name="activities">Activities</string>
 </resources>

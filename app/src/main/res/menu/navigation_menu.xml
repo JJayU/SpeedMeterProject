@@ -5,17 +5,17 @@
     <item
         android:id="@+id/activitiesFragment"
         android:icon="@android:drawable/ic_menu_mapmode"
-        android:title="Activities" />
+        android:title="@string/activities" />
     <item
         android:id="@+id/devicesFragment"
         android:icon="@android:drawable/stat_sys_data_bluetooth"
-        android:title="Devices" />
+        android:title="@string/devices" />
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settingsActivity"
         android:icon="@android:drawable/ic_menu_manage"
-        android:title="Settings" />
+        android:title="@string/settings" />
     <item
         android:id="@+id/aboutFragment"
         android:icon="@android:drawable/ic_menu_help"
-        android:title="About" />
+        android:title="@string/about" />
 </menu>

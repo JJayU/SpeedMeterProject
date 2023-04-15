@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.ActivityMainBinding
+import com.example.speedmeterproject.databinding.FragmentMainBinding
 import java.io.File
 import java.io.StringWriter
 import java.time.LocalDateTime
@@ -15,7 +16,7 @@ import java.time.LocalDateTime
 /**
  * Class to record and process an activity
  */
-class ActivityRecorder(private val context: Context, private var binding: ActivityMainBinding) {
+class ActivityRecorder(private val context: Context, private var binding: FragmentMainBinding) {
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -55,7 +56,7 @@ class ActivityRecorder(private val context: Context, private var binding: Activi
             trackpointList.clear()
             recording = true
             saved = false
-            binding.saveButton.visibility = View.GONE
+            binding.saveButton.visibility = View.INVISIBLE
         }
     }
 

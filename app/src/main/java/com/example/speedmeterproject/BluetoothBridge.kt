@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.speedmeterproject.databinding.ActivityMainBinding
+import com.example.speedmeterproject.databinding.FragmentMainBinding
 import com.harrysoft.androidbluetoothserial.BluetoothManager
 import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice
 import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface
@@ -18,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
  * Class that provides an interface to Bluetooth device
  * Uses BluetoothManager library from https://github.com/harry1453/android-bluetooth-serial
  */
-class BluetoothBridge(private val context: Context, private var binding: ActivityMainBinding) {
+class BluetoothBridge(private val context: Context, private var binding: FragmentMainBinding) {
 
     private lateinit var bluetoothManager: BluetoothManager
     private lateinit var deviceInterface : SimpleBluetoothDeviceInterface
