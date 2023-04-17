@@ -148,13 +148,6 @@
                 android:visibility="invisible"
                 tools:visibility="invisible" />
 
-            <Button
-                android:id="@+id/settings_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:text="@string/settings" />
-
         </LinearLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>

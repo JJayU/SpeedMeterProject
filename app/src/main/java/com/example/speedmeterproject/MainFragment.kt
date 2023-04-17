@@ -2,6 +2,7 @@ package com.example.speedmeterproject
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,55 +17,61 @@ class MainFragment : Fragment() {
     private lateinit var binding : FragmentMainBinding
     private lateinit var bluetoothBridge : BluetoothBridge
 
+    private var firstLaunch = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.i("a", "onCreate")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        if(firstLaunch) {
+            firstLaunch = false
 
-        bluetoothBridge = BluetoothBridge(this.requireContext(), binding)
-        bluetoothBridge.start()
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
 
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
-        val autoConnect = sharedPreferences.getBoolean("auto_connect", false)
+            bluetoothBridge = BluetoothBridge(this.requireContext(), binding)
+            bluetoothBridge.start()
 
-        binding.ConnectButton.setOnClickListener() {
-            if(bluetoothBridge.connectedSuccessfully) {
-                if(!bluetoothBridge.activityRecorder.isRecording()) {
-                    bluetoothBridge.stop()
-                    binding.ConnectButton.text = getString(R.string.no_device_connected)
+            val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
+            val autoConnect = sharedPreferences.getBoolean("auto_connect", false)
+
+            binding.ConnectButton.setOnClickListener() {
+                if(bluetoothBridge.connectedSuccessfully) {
+                    if(!bluetoothBridge.activityRecorder.isRecording()) {
+                        bluetoothBridge.stop()
+                        binding.ConnectButton.text = getString(R.string.no_device_connected)
+                    }
+                } else {
+                    bluetoothBridge.connectDevice()
                 }
-            } else {
+            }
+
+            binding.startButton.setOnClickListener() {
+                bluetoothBridge.startButtonPressed()
+            }
+
+            binding.saveButton.setOnClickListener() {
+                bluetoothBridge.activityRecorder.saveToFile()
+            }
+
+            // TODO -> remove this
+            bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
+            if(autoConnect) {
                 bluetoothBridge.connectDevice()
             }
+            //bluetoothBridge.activityRecorder.start()
         }
-
-        binding.startButton.setOnClickListener() {
-            bluetoothBridge.startButtonPressed()
-        }
-
-        binding.saveButton.setOnClickListener() {
-            bluetoothBridge.activityRecorder.saveToFile()
-        }
-
-        binding.settingsButton.setOnClickListener() {
-            //val settingsActivity = Intent(this, SettingsActivity::class.java)
-            //startActivity(settingsActivity)
-        }
-
-        // TODO -> remove this
-        bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
-        if(autoConnect) {
-            bluetoothBridge.connectDevice()
-        }
-        //bluetoothBridge.activityRecorder.start()
 
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         bluetoothBridge.stop()
     }
 
