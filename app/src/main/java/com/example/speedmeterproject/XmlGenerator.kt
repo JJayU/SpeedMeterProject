@@ -38,7 +38,6 @@ class XmlGenerator {
                         startTag("", "DistanceMeters")
                             text((distance*1000.0).toString())
                         endTag("", "DistanceMeters")
-                        //TODO -> maximum speed
                         startTag("", "Intensity")
                             text("Active")
                         endTag("", "Intensity")

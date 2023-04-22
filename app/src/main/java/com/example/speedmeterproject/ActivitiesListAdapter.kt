@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.speedmeterproject.databinding.ActivityRowBinding
 
-class ActivitiesListAdapter(private val activities : List<ActivityItem>) : RecyclerView.Adapter<ActivitiesListAdapter.ActivitiesViewHolder>() {
+class ActivitiesListAdapter(private val activities : List<DbActivityItem>) : RecyclerView.Adapter<ActivitiesListAdapter.ActivitiesViewHolder>() {
 
     inner class ActivitiesViewHolder(binding : ActivityRowBinding) : ViewHolder(binding.root) {
         val nameTv = binding.activityName

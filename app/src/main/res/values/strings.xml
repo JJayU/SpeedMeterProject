@@ -22,4 +22,5 @@
     <string name="activities">Activities</string>
     <string name="author">Made by Jakub Junkiert</string>
     <string name="app_description">Application for Mobile Applications course in Poznan University of Technology. \n\nApp connects via Bluetooth with Arduino with HC-06 module. Arduino acts as speedometer and counts wheel rotation time. This time is then sent to Android app to be processed.\n\nApplication displays actual speed, total time, distance and average speed. These activities can be saved to .tcx file which can be exported to social services, for example Strava or Garmin Connect.</string>
+    <string name="no_activities_saved_yet">No activities saved yet!</string>
 </resources>
