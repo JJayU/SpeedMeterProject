@@ -14,13 +14,19 @@
             app:useSimpleSummaryProvider="true" />
         <Preference
             android:key="delete_activities"
-            android:title="Delete all activities"
-            android:summary="Deletes all activities, this cannot be undone!"/>
+            android:title="@string/delete_all_activities"
+            android:summary="@string/delete_all_desc"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/settings_bike_header" >
 
+        <EditTextPreference
+            android:defaultValue="00:00:00:00:00"
+            android:key="bike_mac_address"
+            android:title="@string/device_address"
+            app:useSimpleSummaryProvider="true"
+            android:enabled="false" />
         <EditTextPreference
             app:defaultValue="2200"
             app:key="wheel_circ"

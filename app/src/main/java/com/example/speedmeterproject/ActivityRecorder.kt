@@ -3,14 +3,13 @@ package com.example.speedmeterproject
 import android.content.Context
 import android.os.Environment
 import android.util.Log
-import android.util.Xml
 import android.view.View
 import android.widget.Toast
 import androidx.preference.PreferenceManager
-import com.example.speedmeterproject.databinding.ActivityMainBinding
 import com.example.speedmeterproject.databinding.FragmentMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.StringWriter
 import java.time.LocalDateTime
 
 /**
@@ -143,25 +142,32 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
     /**
      * Saves current activity to .tcx file
      */
-    fun saveToFile() {
-        // Request code for creating a PDF document.
-        Log.i("AR", "Saving file")
-
+    suspend fun saveToFile() {
+        // Check if can save to storage
         if(isExternalStorageWritable()) {
             val activityID = LocalDateTime.now().toString()
             val file = File(context.getExternalFilesDir(null), "$activityID.tcx")
-            file.createNewFile()
+            withContext(Dispatchers.IO) {
+                file.createNewFile()
+            }
 
             if(file.isFile) {
-                Log.i("AR", "File created successfully!")
+                // Write data to file
                 file.writeText(XmlGenerator().generateTCX(trackpointList, activityID, timeAtStart, timeAtStop, distance))
-                Log.i("AR", "File saved!")
+                Toast.makeText(context, R.string.file_saved, Toast.LENGTH_LONG).show()
+
+                // Write to database
+                val distanceToSave = String.format("%05.2f", distance)
+                val avgSpeedToSave = String.format("%04.1f", avgSpeed)
+                val repo = Repository(context)
+                repo.insertAll(listOf(DbActivityItem(name = activityID, distance = distanceToSave, time = time, avgSpeed = avgSpeedToSave)))
+
                 saved = true
             } else {
                 Log.i("AR", "File couldn't be created!")
             }
         } else {
-            Toast.makeText(context, "No access to external storage!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, R.string.no_storage_access, Toast.LENGTH_LONG).show()
         }
     }
 

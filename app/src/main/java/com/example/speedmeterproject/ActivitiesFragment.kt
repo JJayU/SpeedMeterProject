@@ -21,7 +21,6 @@ import org.jetbrains.annotations.TestOnly
 class ActivitiesFragment : Fragment() {
 
     private lateinit var binding : FragmentActivitiesBinding
-
     private lateinit var repo : Repository
 
     override fun onCreateView(
@@ -30,11 +29,11 @@ class ActivitiesFragment : Fragment() {
     ): View {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_activities, container, false)
-
         repo = Repository(inflater.context)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            var activitiesList : List<DbActivityItem> = repo.getAll()
+            val activitiesList : List<DbActivityItem> = repo.getAll().reversed()
+            // Show "no activities" when there are no activities
             if(activitiesList.isEmpty()) {
                 binding.noActivitySaved.visibility = View.VISIBLE
             }

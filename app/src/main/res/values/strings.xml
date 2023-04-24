@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Bike speed meter</string>
-    <string name="title_activity_settings">SettingsActivity</string>
-
+    <string name="title_activity_settings">Settings</string>
     <string name="settings_bike_header">Bike Settings</string>
     <string name="settings_app_header">App Settings</string>
     <string name="no_device_connected">Connect device</string>
@@ -15,12 +14,26 @@
     <string name="auto_connect">Auto connect on app startup</string>
     <string name="speed_unit">Speed unit</string>
     <string name="wheel_circumference">Wheel circumference</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="about">About</string>
     <string name="devices">Devices</string>
     <string name="activities">Activities</string>
     <string name="author">Made by Jakub Junkiert</string>
     <string name="app_description">Application for Mobile Applications course in Poznan University of Technology. \n\nApp connects via Bluetooth with Arduino with HC-06 module. Arduino acts as speedometer and counts wheel rotation time. This time is then sent to Android app to be processed.\n\nApplication displays actual speed, total time, distance and average speed. These activities can be saved to .tcx file which can be exported to social services, for example Strava or Garmin Connect.</string>
     <string name="no_activities_saved_yet">No activities saved yet!</string>
+    <string name="file_saved">File saved!</string>
+    <string name="no_storage_access">No access to external storage!</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="cannot_undo">This action cannot be undone</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete_all_activities">Delete all activities</string>
+    <string name="delete_all_desc">Deletes all activities, this cannot be undone!</string>
+    <string name="device_address">Device address</string>
+    <string name="no_permission_bluetooth">No permission for bluetooth connectivity!</string>
+    <string name="connecting">Connecting...</string>
+    <string name="connected">Connected!</string>
+    <string name="activity_not_saved_yet">Activity not saved yet!</string>
+    <string name="activity_not_saved">Activity not saved!</string>
+    <string name="activity_not_saved_desc">Activity not saved yet, are you sure you want to discard this and start a new one?</string>
+    <string name="stop">STOP</string>
 </resources>

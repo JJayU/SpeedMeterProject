@@ -71,7 +71,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         }
         else if (!permissionManager.hasBluetoothPermission(context)) {
             Log.w("BluetoothBridge", "No Bluetooth Permission!")
-            Toast.makeText(context, "Brak uprawnien do polaczenia bluetooth!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.no_permission_bluetooth), Toast.LENGTH_LONG).show()
             return
         }
         else {
@@ -80,7 +80,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
                 .subscribe(this::onConnected, this::onError)
             compositeDisposable.add(btDisposable)
 
-            Toast.makeText(context, "Connecting...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.connecting), Toast.LENGTH_SHORT).show()
             connectedSuccessfully = false
         }
     }
@@ -91,7 +91,6 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     private fun onConnected(connectedDevice : BluetoothSerialDevice) {
         deviceInterface = connectedDevice.toSimpleDeviceInterface()
         deviceInterface.setListeners(this::onMessageReceived, this::onMessageSent, this::onError)
-
     }
 
     /**
@@ -107,7 +106,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     private fun onMessageReceived(message: String) {
         if(!connectedSuccessfully) {
             connectedSuccessfully = true
-            Toast.makeText(context, "Connected!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.connected), Toast.LENGTH_SHORT).show()
             binding.ConnectButton.text = getCurrentDeviceName()
         }
 
@@ -134,7 +133,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     @SuppressLint("MissingPermission")
     fun listBluetoothDevices() {
         if (!permissionManager.hasBluetoothPermission(context)) {
-            Toast.makeText(context, "Brak uprawnien do polaczenia bluetooth!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.no_permission_bluetooth), Toast.LENGTH_LONG).show()
             return
         }
         else {
@@ -160,28 +159,28 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     fun startButtonPressed() {
         if ( !activityRecorder.isRecording() && connectedSuccessfully ) {
             if(!activityRecorder.isSaved() && !activityRecorder.isEmpty()) {
-                Toast.makeText(context, "Activity not saved yet!", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.activity_not_saved_yet), Toast.LENGTH_LONG).show()
 
                 val alertDialogBuilder = AlertDialog.Builder(context)
-                alertDialogBuilder.setTitle("Activity not saved!")
-                alertDialogBuilder.setMessage("Activity not saved yet, are you sure you want to discard this and start a new one?")
-                alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                alertDialogBuilder.setTitle(context.getString(R.string.activity_not_saved))
+                alertDialogBuilder.setMessage(context.getString(R.string.activity_not_saved_desc))
+                alertDialogBuilder.setPositiveButton(context.getString(R.string.yes)) { _, _ ->
                     activityRecorder.start()
-                    binding.startButton.text = "STOP"
+                    binding.startButton.text = context.getString(R.string.stop)
                 }
-                alertDialogBuilder.setNegativeButton("No") { _, _ ->
+                alertDialogBuilder.setNegativeButton(context.getString(R.string.no)) { _, _ ->
 
                 }
                 alertDialogBuilder.show()
             }
             else {
                 activityRecorder.start()
-                binding.startButton.text = "STOP"
+                binding.startButton.text = context.getString(R.string.stop)
             }
         }
         else {
             activityRecorder.stop()
-            binding.startButton.text = "START"
+            binding.startButton.text = context.getString(R.string.start)
         }
     }
 

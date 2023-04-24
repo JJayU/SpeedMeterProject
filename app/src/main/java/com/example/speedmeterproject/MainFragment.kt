@@ -8,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.ActivityMainBinding
 import com.example.speedmeterproject.databinding.FragmentMainBinding
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -51,7 +53,9 @@ class MainFragment : Fragment() {
             }
 
             binding.saveButton.setOnClickListener() {
-                bluetoothBridge.activityRecorder.saveToFile()
+                viewLifecycleOwner.lifecycleScope.launch {
+                    bluetoothBridge.activityRecorder.saveToFile()
+                }
             }
 
             // TODO -> remove this
