@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class MainFragment : Fragment() {
 
     private lateinit var binding : FragmentMainBinding
-    private lateinit var bluetoothBridge : BluetoothBridge
+    lateinit var bluetoothBridge : BluetoothBridge
 
     private var firstLaunch = true
 
@@ -78,5 +78,4 @@ class MainFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         bluetoothBridge.permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults, this.requireContext())
     }
-
 }

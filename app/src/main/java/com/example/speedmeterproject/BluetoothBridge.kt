@@ -21,7 +21,6 @@ import io.reactivex.schedulers.Schedulers
  */
 class BluetoothBridge(private val context: Context, private var binding: FragmentMainBinding) {
 
-    private lateinit var bluetoothManager: BluetoothManager
     private lateinit var deviceInterface : SimpleBluetoothDeviceInterface
 
     private var compositeDisposable = CompositeDisposable()
@@ -131,17 +130,12 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
      * Lists all paired bluetooth devices and print them to the log
      */
     @SuppressLint("MissingPermission")
-    fun listBluetoothDevices() {
-        if (!permissionManager.hasBluetoothPermission(context)) {
+    fun listBluetoothDevices() : List<BluetoothDevice>? {
+        return if (!permissionManager.hasBluetoothPermission(context)) {
             Toast.makeText(context, context.getString(R.string.no_permission_bluetooth), Toast.LENGTH_LONG).show()
-            return
-        }
-        else {
-            val pairedDevices : List<BluetoothDevice> = bluetoothManager.pairedDevicesList
-            for (device in pairedDevices) {
-                Log.d("BT Test", "Device Name: " + device.name)
-                Log.d("BT Test", "MAC: " + device.address)
-            }
+            null
+        } else {
+            bluetoothManager.pairedDevicesList
         }
     }
 
@@ -182,6 +176,10 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
             activityRecorder.stop()
             binding.startButton.text = context.getString(R.string.start)
         }
+    }
+
+    companion object {
+        lateinit var bluetoothManager: BluetoothManager
     }
 
 }
