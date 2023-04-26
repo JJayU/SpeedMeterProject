@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bike speed meter</string>
+    <string name="app_name" translatable="false">Bike speed meter</string>
     <string name="title_activity_settings">Settings</string>
     <string name="settings_bike_header">Bike Settings</string>
     <string name="settings_app_header">App Settings</string>

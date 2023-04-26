@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="settings_bike_header">Ustawienia roweru</string>
+    <string name="settings_app_header">Ustawienia aplikacji</string>
+    <string name="no_device_connected">Połącz urządzenie</string>
+    <string name="speed_unit_kmph">km/h</string>
+    <string name="time">Czas</string>
+    <string name="distance">Dystans</string>
+    <string name="avg_speed">Śr. prędkość</string>
+    <string name="start">START</string>
+    <string name="save">ZAPISZ</string>
+    <string name="settings">Ustawienia</string>
+    <string name="auto_connect">Połącz automatycznie przy włączeniu aplikacji</string>
+    <string name="speed_unit">Jednostka prędkości</string>
+    <string name="wheel_circumference">Obwód koła</string>
+    <string name="about">O aplikacji</string>
+    <string name="devices">Urządzenia</string>
+    <string name="activities">Aktywności</string>
+    <string name="author">Autor: Jakub Junkiert</string>
+    <string name="app_description">Apliikacja na zajęcia z Programowania Aplikacji Mobilnych na Politechnice Poznańskiej. \\n\\nAplikacja łączy się za pośrednictwem Bluetooth z Adruino z modułem HC-06. Arduino pełni rolę prędkościomierza i mierzy czas obrotu koła. Czas ten przesyłany jest do aplikacji by zostać przetworzonym. \\n\\nAplikacja wyświetla aktualną prędkość, czas całkowity, dystans i średnią prędkość. Aktywności mogą być zapisane do pliku .tcx, który może zostać wyeksportowany do serwisów społecznościowych takich jak Strava czy Garmin Connect.</string>
+    <string name="no_activities_saved_yet">Brak zapisanych aktywności!</string>
+    <string name="file_saved">Plik zapisany!</string>
+    <string name="no_storage_access">Brak dostępu do pamięci zewnętrznej!</string>
+    <string name="are_you_sure">Jesteś pewien?</string>
+    <string name="cannot_undo">Ta akcja nie może zostać cofnięta.</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="delete_all_activities">Usuń wszystkie aktywności</string>
+    <string name="delete_all_desc">Usuwa wszystkie aktywności, ta akcja nie może zostać cofnięta</string>
+    <string name="device_address">Adres urządzenia</string>
+    <string name="no_permission_bluetooth">Brak uprawnień do połączenia Bluetooth!</string>
+    <string name="connecting">Łączenie...</string>
+    <string name="connected">Połączono!</string>
+    <string name="activity_not_saved_yet">Aktywność nie jest jeszcze zapisana!</string>
+    <string name="activity_not_saved">Aktywność nie jest zapisana!</string>
+    <string name="activity_not_saved_desc">Aktywność nie została zapisana, jesteś pewien że chcesz kontynuować?</string>
+    <string name="stop">STOP</string>
+    <string name="no_devices_paired">Nie ma żadnych sparowanych urządzeń, sparuj najpierw urządzenie.</string>
+    <string name="devices_desc">Lista urządzeń sparowanych z twoim telefonem. Kliknij urządzenie na liście aby wybrać je jako cel połączenia. Kliknij przycisk \"+\" aby otworzyć ustawienia Bluetooth i sparować nowe urządzenie.</string>
+    <string name="pair_a_new_device">Sparuj nowe urządzenie.</string>
+</resources>
