@@ -34,7 +34,7 @@ class MainFragment : Fragment() {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext())
             val autoConnect = sharedPreferences.getBoolean("auto_connect", false)
 
-            binding.ConnectButton.setOnClickListener() {
+            binding.ConnectButton.setOnClickListener {
                 if(bluetoothBridge.connectedSuccessfully) {
                     if(!bluetoothBridge.activityRecorder.isRecording()) {
                         bluetoothBridge.stop()
@@ -45,11 +45,11 @@ class MainFragment : Fragment() {
                 }
             }
 
-            binding.startButton.setOnClickListener() {
+            binding.startButton.setOnClickListener {
                 bluetoothBridge.startButtonPressed()
             }
 
-            binding.saveButton.setOnClickListener() {
+            binding.saveButton.setOnClickListener {
                 viewLifecycleOwner.lifecycleScope.launch {
                     bluetoothBridge.activityRecorder.saveButtonClicked()
                 }

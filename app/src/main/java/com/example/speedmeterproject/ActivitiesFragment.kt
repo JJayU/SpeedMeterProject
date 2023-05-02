@@ -1,29 +1,18 @@
 package com.example.speedmeterproject
 
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.speedmeterproject.databinding.FragmentActivitiesBinding
-import com.example.speedmeterproject.databinding.FragmentMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import org.jetbrains.annotations.TestOnly
 
 
 class ActivitiesFragment : Fragment() {
@@ -51,14 +40,12 @@ class ActivitiesFragment : Fragment() {
         }
 
         binding.openFolderButton.setOnClickListener {
-            // TODO
-//            val dataDir = requireContext().filesDir
-//            Log.i("a", "${requireContext().packageName}.fileprovider")
-//            val uri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", dataDir)
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            intent.setDataAndType(uri, "resource/folder")
-//            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-//            startActivity(intent)
+            val intent = Intent(Intent.ACTION_PICK)
+            val uri = Uri.parse(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).path + "/SpeedMeterApp/")
+            intent.setDataAndType(uri, "*/*")
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            startActivity(intent)
         }
 
         // Inflate the layout for this fragment
