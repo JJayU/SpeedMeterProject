@@ -10,4 +10,5 @@ data class DbActivityItem(
     val name : String,
     val distance : String,
     val time : String,
-    val avgSpeed : String)
+    val avgSpeed : String,
+    val date : String)

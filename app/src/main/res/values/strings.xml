@@ -39,4 +39,6 @@
     <string name="no_devices_paired">No device paired yet, pair device first!</string>
     <string name="devices_desc">List of devices paired with your smartphone. Tap a device to select it as a connection destination. \nTap "+" to go to Bluetooth settings and pair a new device.</string>
     <string name="pair_a_new_device">Pair a new device</string>
+    <string name="name_activity">Name activity</string>
+    <string name="cancel">CANCEL</string>
 </resources>

@@ -1,16 +1,28 @@
 package com.example.speedmeterproject
 
+import android.app.ActionBar.LayoutParams
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.FragmentMainBinding
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 import java.time.LocalDateTime
+import kotlin.random.Random
 
 /**
  * Class to record and process an activity
@@ -121,7 +133,7 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
             val minutes = (elapsedTime/1000.0/60.0).toInt() % 60
             val seconds = (elapsedTime/1000.0).toInt() % 60
 
-            time = String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds) //TODO -> clean
+            time = String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
 
             trackpointList.add(Trackpoint(actualTime.toString(), distance))
 
@@ -142,29 +154,63 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
     /**
      * Saves current activity to .tcx file
      */
-    suspend fun saveToFile() {
+    suspend fun saveButtonClicked() {
         // Check if can save to storage
         if(isExternalStorageWritable()) {
             val activityID = LocalDateTime.now().toString()
-            val file = File(context.getExternalFilesDir(null), "$activityID.tcx")
-            withContext(Dispatchers.IO) {
-                file.createNewFile()
-            }
+            var activityName = activityID
 
-            if(file.isFile) {
-                // Write data to file
-                file.writeText(XmlGenerator().generateTCX(trackpointList, activityID, timeAtStart, timeAtStop, distance))
-                Toast.makeText(context, R.string.file_saved, Toast.LENGTH_LONG).show()
+            // Setup and create a dialog
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.name_picker_dialog)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+            dialog.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+
+            // Setup edit text field
+            val activityNameEditText =  dialog.findViewById<EditText>(R.id.activityName)
+            activityNameEditText.hint = activityName
+
+            // On save button clicked
+            dialog.findViewById<Button>(R.id.save_button).setOnClickListener {
+                val textFromEditText = activityNameEditText.text.toString()
+                if(textFromEditText != "") {
+                    activityName = textFromEditText
+                }
+
+                // Write to file 2.0
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        val docsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                        val appDir = File(docsDir, "SpeedMeterApp")
+                        appDir.mkdirs()
+                        val file2 = File(appDir, "${filterFilename(activityName)}.tcx")
+                        val outputStream = FileOutputStream(file2)
+                        val writer = OutputStreamWriter(outputStream)
+                        writer.write(XmlGenerator().generateTCX(trackpointList, activityID, timeAtStart, timeAtStop, distance))
+                        writer.close()
+
+                        if(!file2.isFile) {
+                            Log.e("ActivityRecorder", "File couldn't be created!")
+                        }
+                    }
+                }
 
                 // Write to database
                 val distanceToSave = String.format("%05.2f", distance)
                 val avgSpeedToSave = String.format("%04.1f", avgSpeed)
                 val repo = Repository(context)
-                repo.insertAll(listOf(DbActivityItem(name = activityID, distance = distanceToSave, time = time, avgSpeed = avgSpeedToSave)))
+                CoroutineScope(Dispatchers.IO).launch {
+                    repo.insertAll(listOf(DbActivityItem(name = activityName, distance = distanceToSave, time = time, avgSpeed = avgSpeedToSave, date = activityID)))
+                }
 
-                saved = true
-            } else {
-                Log.i("AR", "File couldn't be created!")
+                dialog.dismiss()
+                binding.saveButton.visibility = View.INVISIBLE
+                Toast.makeText(context, R.string.file_saved, Toast.LENGTH_LONG).show()
+            }
+            dialog.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+                dialog.dismiss()
             }
         } else {
             Toast.makeText(context, R.string.no_storage_access, Toast.LENGTH_LONG).show()
@@ -176,5 +222,28 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
      */
     private fun isExternalStorageWritable(): Boolean {
         return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    /*
+     * Filter file name so it is an allowed file name in Android
+     */
+    private fun filterFilename(filename: String): String {
+        val filteredFilename = filename.replace("[^a-zA-Z0-9.-]".toRegex(), "")
+
+        // Limit to 255 characters
+        return if (filteredFilename.length > 255) {
+            filteredFilename.substring(0, 255)
+        }
+        else if (filteredFilename == "") {
+            Random.nextInt(1000, 100000).toString()
+        }
+        else {
+            filteredFilename
+        }
+    }
+
+
+    private fun saveToDbAndFile() {
+
     }
 }

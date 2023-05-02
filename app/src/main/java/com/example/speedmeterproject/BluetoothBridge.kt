@@ -126,20 +126,10 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         return
     }
 
+    @SuppressLint("MissingPermission")
     /**
-     * Lists all paired bluetooth devices and print them to the log
+     * Returns string containing current connected device name
      */
-    @SuppressLint("MissingPermission")
-    fun listBluetoothDevices() : List<BluetoothDevice>? {
-        return if (!permissionManager.hasBluetoothPermission(context)) {
-            Toast.makeText(context, context.getString(R.string.no_permission_bluetooth), Toast.LENGTH_LONG).show()
-            null
-        } else {
-            bluetoothManager.pairedDevicesList
-        }
-    }
-
-    @SuppressLint("MissingPermission")
     fun getCurrentDeviceName() : String {
         val pairedDevices : List<BluetoothDevice> = bluetoothManager.pairedDevicesList
         for (device in pairedDevices) {
@@ -150,6 +140,10 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         return ""
     }
 
+    /**
+     * Starts or stops activity recording and updates button text
+     * Additionally creates a dialog when user wants to start recording a new activity, without saving previous one
+     */
     fun startButtonPressed() {
         if ( !activityRecorder.isRecording() && connectedSuccessfully ) {
             if(!activityRecorder.isSaved() && !activityRecorder.isEmpty()) {
@@ -162,9 +156,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
                     activityRecorder.start()
                     binding.startButton.text = context.getString(R.string.stop)
                 }
-                alertDialogBuilder.setNegativeButton(context.getString(R.string.no)) { _, _ ->
-
-                }
+                alertDialogBuilder.setNegativeButton(context.getString(R.string.no)) { _, _ -> }
                 alertDialogBuilder.show()
             }
             else {

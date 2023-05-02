@@ -1,8 +1,6 @@
 package com.example.speedmeterproject
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.example.speedmeterproject.databinding.ActivityMainBinding
 import com.example.speedmeterproject.databinding.FragmentMainBinding
 import kotlinx.coroutines.launch
 
@@ -54,7 +51,7 @@ class MainFragment : Fragment() {
 
             binding.saveButton.setOnClickListener() {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    bluetoothBridge.activityRecorder.saveToFile()
+                    bluetoothBridge.activityRecorder.saveButtonClicked()
                 }
             }
 

@@ -13,6 +13,7 @@ class ActivitiesListAdapter(private val activities : List<DbActivityItem>) : Rec
         val distanceTv = binding.activityTripDistance
         val timeTv = binding.activityTripTime
         val avgSpeedTv = binding.activityAvgSpeed
+        val dateTv = binding.activityDate
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivitiesViewHolder {
@@ -30,6 +31,7 @@ class ActivitiesListAdapter(private val activities : List<DbActivityItem>) : Rec
         holder.distanceTv.text = activities[position].distance
         holder.avgSpeedTv.text = activities[position].avgSpeed
         holder.timeTv.text = activities[position].time
+        holder.dateTv.text = activities[position].date
     }
 
 }
