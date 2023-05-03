@@ -11,6 +11,7 @@ import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.FragmentMainBinding
@@ -22,6 +23,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 /**
@@ -157,8 +159,9 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
     suspend fun saveButtonClicked() {
         // Check if can save to storage
         if(isExternalStorageWritable()) {
+            // Default activity ID and name is current date and time
             val activityID = LocalDateTime.now().toString()
-            var activityName = activityID
+            var activityName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH.mm"))
 
             // Setup and create a dialog
             val dialog = Dialog(context)
@@ -174,40 +177,58 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
 
             // On save button clicked
             dialog.findViewById<Button>(R.id.save_button).setOnClickListener {
+                // Import text from edit text box
                 val textFromEditText = activityNameEditText.text.toString()
                 if(textFromEditText != "") {
                     activityName = textFromEditText
                 }
+                activityName = filterFilename(activityName)
 
-                // Write to file 2.0
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.IO) {
-                        val docsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                        val appDir = File(docsDir, "SpeedMeterApp")
-                        appDir.mkdirs()
-                        val file2 = File(appDir, "${filterFilename(activityName)}.tcx")
-                        val outputStream = FileOutputStream(file2)
-                        val writer = OutputStreamWriter(outputStream)
-                        writer.write(XmlGenerator().generateTCX(trackpointList, activityID, timeAtStart, timeAtStop, distance))
-                        writer.close()
+                // Application folder
+                val docsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+                val appDir = File(docsDir, "SpeedMeterApp")
+                appDir.mkdirs()
 
-                        if(!file2.isFile) {
-                            Log.e("ActivityRecorder", "File couldn't be created!")
-                        }
+                // Check if there is already a file with that name
+                var fileExists = false
+                for(files in appDir.listFiles()!!) {
+                    if("$activityName.tcx" == files.name) {
+                        fileExists = true
                     }
                 }
 
-                // Write to database
-                val distanceToSave = String.format("%05.2f", distance)
-                val avgSpeedToSave = String.format("%04.1f", avgSpeed)
-                val repo = Repository(context)
-                CoroutineScope(Dispatchers.IO).launch {
-                    repo.insertAll(listOf(DbActivityItem(name = activityName, distance = distanceToSave, time = time, avgSpeed = avgSpeedToSave, date = activityID)))
-                }
+                if(!fileExists) {
+                    // Write to file 2.0
+                    CoroutineScope(Dispatchers.IO).launch {
+                        withContext(Dispatchers.IO) {
+                            val file = File(appDir, "${activityName}.tcx")
+                            val outputStream = FileOutputStream(file)
+                            val writer = OutputStreamWriter(outputStream)
+                            writer.write(XmlGenerator().generateTCX(trackpointList, activityID, timeAtStart, timeAtStop, distance))
+                            writer.close()
 
-                dialog.dismiss()
-                binding.saveButton.visibility = View.INVISIBLE
-                Toast.makeText(context, R.string.file_saved, Toast.LENGTH_LONG).show()
+                            if(!file.isFile) {
+                                Log.e("ActivityRecorder", "File couldn't be created!")
+                            }
+                        }
+                    }
+
+                    // Write to database
+                    val distanceToSave = String.format("%05.2f", distance)
+                    val avgSpeedToSave = String.format("%04.1f", avgSpeed)
+                    val repo = Repository(context)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        repo.insertAll(listOf(DbActivityItem(name = activityName, distance = distanceToSave, time = time, avgSpeed = avgSpeedToSave, date = activityID)))
+                    }
+
+                    dialog.dismiss()
+                    binding.saveButton.visibility = View.INVISIBLE
+                    Toast.makeText(context, R.string.file_saved, Toast.LENGTH_LONG).show()
+                    saved = true
+                }
+                else {
+                    dialog.findViewById<TextView>(R.id.activityExists).visibility = View.VISIBLE
+                }
             }
             dialog.findViewById<Button>(R.id.cancel_button).setOnClickListener {
                 dialog.dismiss()
@@ -228,22 +249,18 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
      * Filter file name so it is an allowed file name in Android
      */
     private fun filterFilename(filename: String): String {
-        val filteredFilename = filename.replace("[^a-zA-Z0-9.-]".toRegex(), "")
+        val filteredFilename = filename.replace("[^a-zA-Z0-9.\\s-]".toRegex(), "")
 
         // Limit to 255 characters
         return if (filteredFilename.length > 255) {
             filteredFilename.substring(0, 255)
         }
         else if (filteredFilename == "") {
-            Random.nextInt(1000, 100000).toString()
+            // Generate random filename if entered filename contains only prohibited characters
+            Random.nextInt(1000, 10000000).toString()
         }
         else {
             filteredFilename
         }
-    }
-
-
-    private fun saveToDbAndFile() {
-
     }
 }

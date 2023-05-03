@@ -35,6 +35,15 @@
             android:textAlignment="center"
             android:textColor="@color/black" />
 
+        <TextView
+            android:id="@+id/activityExists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/activity_with_that_name_already_exists"
+            android:textColor="#ff0000"
+            android:visibility="invisible" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

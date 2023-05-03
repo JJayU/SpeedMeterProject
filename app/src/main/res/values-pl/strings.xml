@@ -41,4 +41,5 @@
     <string name="pair_a_new_device">Sparuj nowe urządzenie.</string>
     <string name="name_activity">Nazwij aktywność</string>
     <string name="cancel">ANULUJ</string>
+    <string name="activity_with_that_name_already_exists">Aktywność o tej nazwie już istnieje!</string>
 </resources>
