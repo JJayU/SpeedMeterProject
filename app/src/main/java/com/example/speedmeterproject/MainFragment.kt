@@ -41,6 +41,7 @@ class MainFragment : Fragment() {
                         binding.ConnectButton.text = getString(R.string.no_device_connected)
                     }
                 } else {
+                    bluetoothBridge.setMacAddress(sharedPreferences.getString("bike_mac_address", "")!!)
                     bluetoothBridge.connectDevice()
                 }
             }
@@ -55,12 +56,10 @@ class MainFragment : Fragment() {
                 }
             }
 
-            // TODO -> remove this
-            bluetoothBridge.setMacAddress("98:D3:31:F4:03:F5") //temporary
+            bluetoothBridge.setMacAddress(sharedPreferences.getString("bike_mac_address", "")!!)
             if(autoConnect) {
                 bluetoothBridge.connectDevice()
             }
-            //bluetoothBridge.activityRecorder.start()
         }
 
         return binding.root

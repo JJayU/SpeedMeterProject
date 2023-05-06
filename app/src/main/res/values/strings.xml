@@ -42,4 +42,5 @@
     <string name="name_activity">Name activity</string>
     <string name="cancel">CANCEL</string>
     <string name="activity_with_that_name_already_exists">Activity with that name already exists!</string>
+    <string name="device_selected">Device %1$s selected!</string>
 </resources>
