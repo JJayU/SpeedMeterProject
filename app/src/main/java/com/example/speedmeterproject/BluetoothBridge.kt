@@ -3,10 +3,12 @@ package com.example.speedmeterproject
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.speedmeterproject.databinding.ActivityMainBinding
+import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.FragmentMainBinding
 import com.harrysoft.androidbluetoothserial.BluetoothManager
 import com.harrysoft.androidbluetoothserial.BluetoothSerialDevice
@@ -23,6 +25,11 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
 
     private lateinit var deviceInterface : SimpleBluetoothDeviceInterface
 
+    private var cyclicHandler = Handler(Looper.getMainLooper())
+
+    /** Maximum time in millis after which activity is stopped when no connection */
+    private val TIMEOUT_TIME = 5000
+
     private var compositeDisposable = CompositeDisposable()
     private lateinit var btDisposable : Disposable
 
@@ -32,6 +39,11 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     private var connectedDeviceMAC : String? = null
     /** Device connected */
     var connectedSuccessfully = false
+    /** Data sent from Arduino update interval */
+    private var updateInterval = 500
+
+    private var lastTimeMessageReceived = 0L
+
 
     var activityRecorder = ActivityRecorder(context, binding)
 
@@ -41,6 +53,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     fun start() {
         bluetoothManager = BluetoothManager.getInstance()
         permissionManager.onStartupCheck(context)
+        cyclicHandler.post(checkIfStillConnectedAndUpdateGUI)
     }
 
     /**
@@ -96,7 +109,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
      * Executed every time a message is sent to device
      */
     private fun onMessageSent(message : String) {
-        //Toast.makeText(this, "Sent a message!", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, "Sent a message!", Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -107,6 +120,8 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
             connectedSuccessfully = true
             Toast.makeText(context, context.getString(R.string.connected), Toast.LENGTH_SHORT).show()
             binding.ConnectButton.text = getCurrentDeviceName()
+            sendNewUpdateInterval()
+            binding.bluetoothStatus.setImageDrawable(context.getDrawable(R.drawable.baseline_bluetooth_connected_24))
         }
 
         val receivedTimeOfRev = message.toDoubleOrNull()
@@ -117,6 +132,8 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         else {
             Log.i("BT Bridge", "Incorrect message received!")
         }
+
+        lastTimeMessageReceived = System.currentTimeMillis()
     }
 
     /**
@@ -170,8 +187,63 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         }
     }
 
+    fun checkForPreferencesChange() {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+        // Check for change in speed unit
+        val speedUnit = sharedPreferences.getString("speed_unit", "")
+        if(speedUnit == "kmph") {
+            binding.speedUnit.text = context.getString(R.string.speed_unit_kmph)
+            activityRecorder.speedUnitMph = false
+        }
+        else {
+            binding.speedUnit.text = context.getString(R.string.speed_unit_mph)
+            activityRecorder.speedUnitMph = true
+        }
+        activityRecorder.updateGUI()
+
+        // Check for change in update interval
+        val newUpdateInterval = sharedPreferences.getString("update_interval", "")
+        if(newUpdateInterval != "" && newUpdateInterval != null) {
+            if(newUpdateInterval.toInt() != updateInterval) {
+                updateInterval = newUpdateInterval.toInt()
+                sendNewUpdateInterval()
+            }
+        }
+    }
+
+    fun sendNewUpdateInterval() {
+        if(connectedSuccessfully) {
+            val messageToSend = when (updateInterval) {
+                250 -> "1"
+                500 -> "2"
+                750 -> "3"
+                1000 -> "4"
+                else -> "2"
+            }
+            deviceInterface.sendMessage(messageToSend)
+        }
+    }
+
+    private val checkIfStillConnectedAndUpdateGUI = object : Runnable {
+        override fun run() {
+            activityRecorder.updateGUI()
+            if(connectedSuccessfully) {
+                val diffTime: Long = System.currentTimeMillis() - lastTimeMessageReceived
+                if(diffTime > TIMEOUT_TIME) {
+                    Toast.makeText(context, "Device disconnected!", Toast.LENGTH_LONG).show()
+                    activityRecorder.stop()
+                    connectedSuccessfully = false
+                    bluetoothManager.closeDevice(connectedDeviceMAC)
+                    binding.ConnectButton.text = context.getString(R.string.no_device_connected)
+                    binding.startButton.text = context.getString(R.string.start)
+                    binding.bluetoothStatus.setImageDrawable(context.getDrawable(R.drawable.baseline_bluetooth_disabled_24))
+                }
+            }
+            cyclicHandler.postDelayed(this, 100)
+        }
+    }
+
     companion object {
         lateinit var bluetoothManager: BluetoothManager
     }
-
 }

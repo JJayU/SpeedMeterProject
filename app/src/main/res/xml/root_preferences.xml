@@ -27,6 +27,13 @@
             android:title="@string/device_address"
             app:useSimpleSummaryProvider="true"
             android:enabled="false" />
+        <ListPreference
+            app:key="update_interval"
+            app:title="Update interval"
+            android:defaultValue="500"
+            app:entries="@array/update_interval_entries"
+            app:entryValues="@array/update_interval_values"
+            app:useSimpleSummaryProvider="true" />
         <EditTextPreference
             app:defaultValue="2200"
             app:key="wheel_circ"

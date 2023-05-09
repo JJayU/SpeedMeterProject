@@ -39,6 +39,7 @@ class MainFragment : Fragment() {
                     if(!bluetoothBridge.activityRecorder.isRecording()) {
                         bluetoothBridge.stop()
                         binding.ConnectButton.text = getString(R.string.no_device_connected)
+                        binding.bluetoothStatus.setImageDrawable(requireContext().getDrawable(R.drawable.baseline_bluetooth_disabled_24))
                     }
                 } else {
                     bluetoothBridge.setMacAddress(sharedPreferences.getString("bike_mac_address", "")!!)
@@ -65,11 +66,17 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        bluetoothBridge.checkForPreferencesChange()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         bluetoothBridge.stop()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         bluetoothBridge.permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults, this.requireContext())

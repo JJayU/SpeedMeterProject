@@ -1,5 +1,6 @@
 package com.example.speedmeterproject
 
+import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
 import android.app.Dialog
 import android.content.Context
@@ -9,6 +10,7 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -34,13 +36,15 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     /** Time from the beginning of activity */
-    var time = ""
+    var time = "00:00:00"
     /** Total distance in activity */
     var distance = 0.0
     /** Average speed in activity */
     var avgSpeed = 0.0
     /** Current speed */
     var currentSpeed = 0.0
+    /** Speed unit 0 - km/h, 1 - mph */
+    var speedUnitMph = false
 
     /** True if activity is being recorded */
     private var recording = false
@@ -76,6 +80,7 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
     /**
      * Stops recording an activity
      */
+    @SuppressLint("SetTextI18n")
     fun stop() {
         if(recording) {
             recording = false
@@ -138,19 +143,24 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
             time = String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds)
 
             trackpointList.add(Trackpoint(actualTime.toString(), distance))
-
-            updateGUI()
         }
     }
 
     /**
      * Updates GUI with updated values
      */
-    private fun updateGUI(){
+    fun updateGUI(){
         binding.tripTime.text = time
-        binding.actualSpeed.text = String.format("%04.1f", currentSpeed)
-        binding.avgSpeed.text = String.format("%04.1f", avgSpeed)
-        binding.tripDistance.text = String.format("%05.2f", distance)
+        if(!speedUnitMph) {
+            binding.actualSpeed.text = String.format("%04.1f", currentSpeed)
+            binding.avgSpeed.text = String.format("%04.1f", avgSpeed)
+            binding.tripDistance.text = String.format("%05.2f", distance)
+        }
+        else {
+            binding.actualSpeed.text = String.format("%04.1f", currentSpeed * 0.621371192)
+            binding.avgSpeed.text = String.format("%04.1f", avgSpeed * 0.621371192)
+            binding.tripDistance.text = String.format("%05.2f", distance * 0.621371192)
+        }
     }
 
     /**
@@ -174,6 +184,11 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
             // Setup edit text field
             val activityNameEditText =  dialog.findViewById<EditText>(R.id.activityName)
             activityNameEditText.hint = activityName
+            activityNameEditText.requestFocus()
+            val keyboard = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            keyboard.showSoftInput(binding.root, InputMethodManager.SHOW_IMPLICIT)
+            //TODO <- doesn't work xd
+
 
             // On save button clicked
             dialog.findViewById<Button>(R.id.save_button).setOnClickListener {
