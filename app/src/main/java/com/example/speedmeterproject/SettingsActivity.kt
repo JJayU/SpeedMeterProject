@@ -5,15 +5,12 @@ import android.os.Environment
 import android.text.InputFilter
 import android.text.InputType
 import android.text.Spanned
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import java.io.File
 

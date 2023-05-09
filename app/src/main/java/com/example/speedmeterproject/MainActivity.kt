@@ -1,13 +1,11 @@
 package com.example.speedmeterproject
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

@@ -40,9 +40,9 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
     /** Total distance in activity */
     var distance = 0.0
     /** Average speed in activity */
-    var avgSpeed = 0.0
+    private var avgSpeed = 0.0
     /** Current speed */
-    var currentSpeed = 0.0
+    private var currentSpeed = 0.0
     /** Speed unit 0 - km/h, 1 - mph */
     var speedUnitMph = false
 

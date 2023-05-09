@@ -1,7 +1,6 @@
 package com.example.speedmeterproject
 
 import android.util.Xml
-import com.example.speedmeterproject.Trackpoint
 import java.io.StringWriter
 
 class XmlGenerator {
@@ -48,7 +47,7 @@ class XmlGenerator {
                             for(trackpoint in trackpointList) {
                                 startTag("", "Trackpoint")
                                 startTag("", "Time")
-                                text(trackpoint.time.toString())
+                                text(trackpoint.time)
                                 endTag("", "Time")
                                 startTag("", "DistanceMeters")
                                 text((trackpoint.distance*1000.0).toString())

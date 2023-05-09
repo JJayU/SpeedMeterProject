@@ -29,7 +29,7 @@
             android:enabled="false" />
         <ListPreference
             app:key="update_interval"
-            app:title="Update interval"
+            app:title="@string/update_interval"
             android:defaultValue="500"
             app:entries="@array/update_interval_entries"
             app:entryValues="@array/update_interval_values"

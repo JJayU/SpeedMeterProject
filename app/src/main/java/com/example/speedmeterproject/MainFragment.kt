@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class MainFragment : Fragment() {
 
     private lateinit var binding : FragmentMainBinding
-    lateinit var bluetoothBridge : BluetoothBridge
+    private lateinit var bluetoothBridge : BluetoothBridge
 
     private var firstLaunch = true
 

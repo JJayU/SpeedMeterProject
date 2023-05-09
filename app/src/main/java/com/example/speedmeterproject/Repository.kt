@@ -2,7 +2,6 @@ package com.example.speedmeterproject
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 /*

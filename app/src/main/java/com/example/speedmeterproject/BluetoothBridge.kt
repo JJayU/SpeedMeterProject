@@ -28,7 +28,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
     private var cyclicHandler = Handler(Looper.getMainLooper())
 
     /** Maximum time in millis after which activity is stopped when no connection */
-    private val TIMEOUT_TIME = 5000
+    private val TIMEOUT = 5000
 
     private var compositeDisposable = CompositeDisposable()
     private lateinit var btDisposable : Disposable
@@ -211,7 +211,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         }
     }
 
-    fun sendNewUpdateInterval() {
+    private fun sendNewUpdateInterval() {
         if(connectedSuccessfully) {
             val messageToSend = when (updateInterval) {
                 250 -> "1"
@@ -229,7 +229,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
             activityRecorder.updateGUI()
             if(connectedSuccessfully) {
                 val diffTime: Long = System.currentTimeMillis() - lastTimeMessageReceived
-                if(diffTime > TIMEOUT_TIME) {
+                if(diffTime > TIMEOUT) {
                     Toast.makeText(context, "Device disconnected!", Toast.LENGTH_LONG).show()
                     activityRecorder.stop()
                     connectedSuccessfully = false

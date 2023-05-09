@@ -30,7 +30,7 @@
     <string name="delete_all_desc">Usuwa wszystkie aktywności, ta akcja nie może zostać cofnięta</string>
     <string name="device_address">Adres urządzenia</string>
     <string name="no_permission_bluetooth">Brak uprawnień do połączenia Bluetooth!</string>
-    <string name="connecting">Łączenie...</string>
+    <string name="connecting">Łączenie…</string>
     <string name="connected">Połączono!</string>
     <string name="activity_not_saved_yet">Aktywność nie jest jeszcze zapisana!</string>
     <string name="activity_not_saved">Aktywność nie jest zapisana!</string>
@@ -42,6 +42,7 @@
     <string name="name_activity">Nazwij aktywność</string>
     <string name="cancel">ANULUJ</string>
     <string name="activity_with_that_name_already_exists">Aktywność o tej nazwie już istnieje!</string>
-    <string name="device_selected">Urządzenie %1$s połączone!</string>
+    <string name="device_selected">Urządzenie %1$s wybrane</string>
     <string name="speed_unit_mph">mph</string>
+    <string name="update_interval">Okres odświeżania</string>
 </resources>
