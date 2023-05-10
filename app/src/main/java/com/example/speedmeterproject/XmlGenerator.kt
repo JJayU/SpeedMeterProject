@@ -5,6 +5,9 @@ import java.io.StringWriter
 
 class XmlGenerator {
 
+    /**
+     * Return a string formatted in .tcx file format, based on given trackpointList
+     */
     fun generateTCX(trackpointList : List<Trackpoint>, activityID : String, timeAtStart : Long, timeAtStop : Long, distance : Double) : String {
         val xmlSerializer = Xml.newSerializer()
         val writer = StringWriter()

@@ -260,8 +260,9 @@ class ActivityRecorder(private val context: Context, private var binding: Fragme
         return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
     }
 
-    /*
+    /**
      * Filter file name so it is an allowed file name in Android
+     * @param filename filename String to filter
      */
     private fun filterFilename(filename: String): String {
         val filteredFilename = filename.replace("[^a-zA-Z0-9.\\s-]".toRegex(), "")

@@ -3,7 +3,7 @@ package com.example.speedmeterproject
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/* Data class for storing activity statistics in database */
+/** Data class for storing activity statistics in database */
 @Entity(tableName = "activities_table")
 data class DbActivityItem(
     @PrimaryKey(autoGenerate = true) val uid : Int = 0,

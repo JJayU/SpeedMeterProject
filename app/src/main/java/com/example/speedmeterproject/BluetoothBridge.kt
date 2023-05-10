@@ -8,6 +8,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.preference.PreferenceManager
 import com.example.speedmeterproject.databinding.FragmentMainBinding
 import com.harrysoft.androidbluetoothserial.BluetoothManager
@@ -121,7 +122,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
             Toast.makeText(context, context.getString(R.string.connected), Toast.LENGTH_SHORT).show()
             binding.ConnectButton.text = getCurrentDeviceName()
             sendNewUpdateInterval()
-            binding.bluetoothStatus.setImageDrawable(context.getDrawable(R.drawable.baseline_bluetooth_connected_24))
+            binding.bluetoothStatus.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.baseline_bluetooth_connected_24))
         }
 
         val receivedTimeOfRev = message.toDoubleOrNull()
@@ -166,6 +167,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
             if(!activityRecorder.isSaved() && !activityRecorder.isEmpty()) {
                 Toast.makeText(context, context.getString(R.string.activity_not_saved_yet), Toast.LENGTH_LONG).show()
 
+                // Build a dialog asking user if he is sure he wants to start a new activity without saving previous one
                 val alertDialogBuilder = AlertDialog.Builder(context)
                 alertDialogBuilder.setTitle(context.getString(R.string.activity_not_saved))
                 alertDialogBuilder.setMessage(context.getString(R.string.activity_not_saved_desc))
@@ -187,6 +189,9 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         }
     }
 
+    /**
+     * Checks if some preferences that require change in app behavior or look was changed
+     */
     fun checkForPreferencesChange() {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         // Check for change in speed unit
@@ -211,6 +216,9 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         }
     }
 
+    /**
+     * Sends new update interval to device
+     */
     private fun sendNewUpdateInterval() {
         if(connectedSuccessfully) {
             val messageToSend = when (updateInterval) {
@@ -224,11 +232,16 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
         }
     }
 
+    /**
+     * Periodically checks if device is still connected to app (if data is sent)
+     * Also updates GUI
+     */
     private val checkIfStillConnectedAndUpdateGUI = object : Runnable {
         override fun run() {
             activityRecorder.updateGUI()
             if(connectedSuccessfully) {
                 val diffTime: Long = System.currentTimeMillis() - lastTimeMessageReceived
+                // If no message was received in a given time, stop activity
                 if(diffTime > TIMEOUT) {
                     Toast.makeText(context, "Device disconnected!", Toast.LENGTH_LONG).show()
                     activityRecorder.stop()
@@ -236,7 +249,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
                     bluetoothManager.closeDevice(connectedDeviceMAC)
                     binding.ConnectButton.text = context.getString(R.string.no_device_connected)
                     binding.startButton.text = context.getString(R.string.start)
-                    binding.bluetoothStatus.setImageDrawable(context.getDrawable(R.drawable.baseline_bluetooth_disabled_24))
+                    binding.bluetoothStatus.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.baseline_bluetooth_disabled_24))
                 }
             }
             cyclicHandler.postDelayed(this, 100)

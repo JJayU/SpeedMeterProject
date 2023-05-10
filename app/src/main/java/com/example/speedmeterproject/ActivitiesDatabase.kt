@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-/*
+/**
  Declaration of database
  */
 @Database(entities = [DbActivityItem::class], version = 1)

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
@@ -39,7 +40,7 @@ class MainFragment : Fragment() {
                     if(!bluetoothBridge.activityRecorder.isRecording()) {
                         bluetoothBridge.stop()
                         binding.ConnectButton.text = getString(R.string.no_device_connected)
-                        binding.bluetoothStatus.setImageDrawable(requireContext().getDrawable(R.drawable.baseline_bluetooth_disabled_24))
+                        binding.bluetoothStatus.setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.baseline_bluetooth_disabled_24))
                     }
                 } else {
                     bluetoothBridge.setMacAddress(sharedPreferences.getString("bike_mac_address", "")!!)

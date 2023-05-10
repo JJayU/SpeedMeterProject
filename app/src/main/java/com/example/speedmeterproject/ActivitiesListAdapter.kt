@@ -16,16 +16,25 @@ class ActivitiesListAdapter(private val activities : List<DbActivityItem>) : Rec
         val dateTv = binding.activityDate
     }
 
+    /**
+     * Executed on ViewHolder creation
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivitiesViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val activityRowBinding = ActivityRowBinding.inflate(inflater, parent, false)
         return ActivitiesViewHolder(activityRowBinding)
     }
 
+    /**
+     * Returns list count
+     */
     override fun getItemCount(): Int {
         return activities.size
     }
 
+    /**
+     * Executed when binding item to ViewHolder
+     */
     override fun onBindViewHolder(holder: ActivitiesViewHolder, position: Int) {
         holder.nameTv.text = activities[position].name
         holder.distanceTv.text = activities[position].distance
