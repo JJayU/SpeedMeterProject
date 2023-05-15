@@ -243,7 +243,7 @@ class BluetoothBridge(private val context: Context, private var binding: Fragmen
                 val diffTime: Long = System.currentTimeMillis() - lastTimeMessageReceived
                 // If no message was received in a given time, stop activity
                 if(diffTime > TIMEOUT) {
-                    Toast.makeText(context, "Device disconnected!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.device_disconnected), Toast.LENGTH_LONG).show()
                     activityRecorder.stop()
                     connectedSuccessfully = false
                     bluetoothManager.closeDevice(connectedDeviceMAC)

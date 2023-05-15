@@ -45,4 +45,7 @@
     <string name="device_selected">Device %1$s selected</string>
     <string name="speed_unit_mph">mph</string>
     <string name="update_interval">Update interval</string>
+    <string name="device_disconnected">Device disconnected!</string>
+    <string name="activity_removed">Activity removed</string>
+    <string name="are_you_sure_you_want_to_delete_this_activity">Are you sure you want to delete this activity?</string>
 </resources>

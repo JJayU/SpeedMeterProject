@@ -45,4 +45,7 @@
     <string name="device_selected">Urządzenie %1$s wybrane</string>
     <string name="speed_unit_mph">mph</string>
     <string name="update_interval">Okres odświeżania</string>
+    <string name="device_disconnected">Urządzenie zostało rozłączone!</string>
+    <string name="activity_removed">Usunięto aktywnośc</string>
+    <string name="are_you_sure_you_want_to_delete_this_activity">Czy jesteś pewien, że chcesz usunąć tą aktywność?</string>
 </resources>

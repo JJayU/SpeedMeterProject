@@ -28,5 +28,10 @@
         android:id="@+id/activitiesFragment"
         android:name="com.example.speedmeterproject.ActivitiesFragment"
         android:label="@string/activities"
-        tools:layout="@layout/fragment_activities" />
+        tools:layout="@layout/fragment_activities" >
+        <action
+            android:id="@+id/action_activitiesFragment_self"
+            app:destination="@id/activitiesFragment"
+            app:launchSingleTop="false" />
+    </fragment>
 </navigation>
